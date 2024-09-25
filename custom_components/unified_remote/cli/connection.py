@@ -2,6 +2,7 @@
 import re
 from json import dumps
 from uuid import uuid4
+from hashlib import sha256
 
 from requests import Session
 
@@ -15,6 +16,9 @@ class Connection:
         self.__headers = ""
         # Creating a persistent http session
         self.__session = Session()
+
+        self.web_user = ""
+        self.web_password = ""
 
     def __del__(self):
         self.__session.close()
@@ -54,9 +58,13 @@ class Connection:
         and set it to request headers."""
 
         response = self.__session.get(self.__url + "connect")
-        conn_id = response.json()["id"]
-        headers = {"UR-Connection-ID": conn_id}
+        self.__conn_id  = response.json()["id"] # Session later
+        headers = {"UR-Connection-ID": self.__conn_id}
         self.__headers = headers
+
+    def __encrypt_sha256(self, hash_str):
+        sha_sign = sha256(hash_str.encode()).hexdigest()
+        return sha_sign
 
     def __autenticate(self):
         "Do some server authentication to make connection persistent and stable."
@@ -70,9 +78,14 @@ class Connection:
             "Platform": "web",
             "Source": self.__source_guid,
         }
-        self.__session.post(
+        response = self.__session.post(
             self.__url + "request", headers=self.__headers, data=dumps(payload)
         )
+        pw_uuid = response.json()["Password"]
+
+        # hash is SHA256 of PWUID + WEBPW + REQUID - Or - SHA256(user:pw)
+        hash_pw = self.__encrypt_sha256(f"{pw_uuid}{self.web_password}{password}")
+        #hash_pw = self.__encrypt_sha256("{self.web_user}:{self.web_password}")
 
         payload = {
             "Capabilities": {
@@ -85,6 +98,7 @@ class Connection:
             },
             "Action": 1,
             "Request": 1,
+            "Password": hash_pw,
             "Source": self.__source_guid,
         }
         self.__session.post(
