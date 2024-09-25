@@ -1,3 +1,4 @@
 .env
 custom_components/unified_remote/cli/__pycache__
+custom_components/unified_remote/__pycache__/
 .vscode/launch.json

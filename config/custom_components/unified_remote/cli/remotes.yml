@@ -1,0 +1,11 @@
+remotes:
+  volume:
+    id: Unified.Media
+    type: media
+
+types:
+  media:
+    controls:
+      - "volume_down"
+      - "volume_mute"
+      - "volume_up"

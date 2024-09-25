@@ -1,4 +1,7 @@
 remotes:
+  volume:
+    id: Unified.Media
+    type: media
   prime_video:
     id: "Unified.AmazonPrimeVideo"
     type: media_video

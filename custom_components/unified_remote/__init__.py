@@ -2,10 +2,10 @@
 import logging as log
 from datetime import timedelta
 
-import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
-from homeassistant.const import CONF_HOST, CONF_HOSTS, CONF_NAME, CONF_PORT
-from homeassistant.helpers.event import track_time_interval
+#import homeassistant.helpers.config_validation as cv
+#import voluptuous as vol
+#from homeassistant.const import CONF_HOST, CONF_HOSTS, CONF_NAME, CONF_PORT
+#from homeassistant.helpers.event import track_time_interval
 from requests import ConnectionError
 
 from custom_components.unified_remote.cli.computer import Computer
@@ -14,6 +14,7 @@ from custom_components.unified_remote.cli.remotes import Remotes
 DOMAIN = "unified_remote"
 CONF_RETRY = "retry_delay"
 
+'''
 CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
@@ -35,12 +36,13 @@ CONFIG_SCHEMA = vol.Schema(
     },
     extra=vol.ALLOW_EXTRA,
 )
+'''
 
 DEFAULT_NAME = ""
 
 _LOGGER = log.getLogger(__name__)
 
-REMOTE_FILE_PATH = "/config/custom_components/unified_remote/cli/remotes.yml"
+REMOTE_FILE_PATH = "config/custom_components/unified_remote/cli/remotes.yml"
 
 try:
     REMOTES = Remotes(REMOTE_FILE_PATH)
